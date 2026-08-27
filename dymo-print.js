@@ -128,6 +128,15 @@ var DymoPrint = (function () {
     return initPromise;
   }
 
+  // Every label prints in all caps.
+  function allCaps(fields) {
+    var out = {};
+    Object.keys(fields).forEach(function (k) {
+      out[k] = String(fields[k]).toUpperCase();
+    });
+    return out;
+  }
+
   function loadTemplate(fileName) {
     // Always fetch a fresh copy — the host may cache .label files for minutes,
     // which is confusing while tuning layouts.
@@ -142,11 +151,11 @@ var DymoPrint = (function () {
     return ensureReady()
       .then(function () { return loadTemplate('labels/ArchiveLabel.label'); })
       .then(function (xml) {
-        backend().printLabelXml(xml, backend().getPrinterName(), {
+        backend().printLabelXml(xml, backend().getPrinterName(), allCaps({
           OrderNumber: parsed.orderNumber,
           ClientName: parsed.clientName,
           PrintDate: new Date().toLocaleDateString()
-        });
+        }));
       });
   }
 
@@ -159,10 +168,10 @@ var DymoPrint = (function () {
         var printerName = backend().getPrinterName();
 
         function printOne(boxNumber) {
-          backend().printLabelXml(xml, printerName, {
+          backend().printLabelXml(xml, printerName, allCaps({
             OrderNumber: parsed.orderNumber,
             BoxCount: 'Box ' + boxNumber + ' of ' + totalBoxes
-          });
+          }));
         }
 
         var chain = Promise.resolve();
