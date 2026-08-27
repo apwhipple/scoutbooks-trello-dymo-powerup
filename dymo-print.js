@@ -129,7 +129,9 @@ var DymoPrint = (function () {
   }
 
   function loadTemplate(fileName) {
-    return fetch(fileName).then(function (resp) {
+    // Always fetch a fresh copy — the host may cache .label files for minutes,
+    // which is confusing while tuning layouts.
+    return fetch(fileName, { cache: 'no-store' }).then(function (resp) {
       if (!resp.ok) throw new Error('Could not load label template: ' + fileName);
       return resp.text();
     });
