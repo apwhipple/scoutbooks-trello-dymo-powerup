@@ -3,7 +3,8 @@
   Archive label for the DYMO 30336 Multi-Purpose roll (1 in x 2-1/8 in).
   dymo-print.js fills these text objects by NAME: OrderNumber, ClientName, PrintDate
   Only the <Name> values matter at print time; the <String> text is placeholder.
-  Layout: three lines, centered horizontally and vertically, tight spacing.
+  Font: DIN Alternate Bold, 12 pt, centered, all three lines identical.
+  (Text is uppercased by dymo-print.js and shrinks to fit if a value is long.)
 -->
 <DieCutLabel Version="8.0" Units="twips">
   <PaperOrientation>Landscape</PaperOrientation>
@@ -30,13 +31,13 @@
         <Element>
           <String>19711</String>
           <Attributes>
-            <Font Family="Helvetica" Size="14" Bold="True" Italic="False" Underline="False" Strikeout="False" />
+            <Font Family="DIN Alternate" Size="12" Bold="True" Italic="False" Underline="False" Strikeout="False" />
             <ForeColor Alpha="255" Red="0" Green="0" Blue="0" />
           </Attributes>
         </Element>
       </StyledText>
     </TextObject>
-    <Bounds X="220" Y="300" Width="2620" Height="300" />
+    <Bounds X="220" Y="300" Width="2620" Height="290" />
   </ObjectInfo>
   <ObjectInfo>
     <TextObject>
@@ -56,13 +57,13 @@
         <Element>
           <String>SKINNER</String>
           <Attributes>
-            <Font Family="Helvetica" Size="11" Bold="False" Italic="False" Underline="False" Strikeout="False" />
+            <Font Family="DIN Alternate" Size="12" Bold="True" Italic="False" Underline="False" Strikeout="False" />
             <ForeColor Alpha="255" Red="0" Green="0" Blue="0" />
           </Attributes>
         </Element>
       </StyledText>
     </TextObject>
-    <Bounds X="220" Y="600" Width="2620" Height="270" />
+    <Bounds X="220" Y="590" Width="2620" Height="290" />
   </ObjectInfo>
   <ObjectInfo>
     <TextObject>
@@ -82,12 +83,12 @@
         <Element>
           <String>1/1/2026</String>
           <Attributes>
-            <Font Family="Helvetica" Size="8" Bold="False" Italic="False" Underline="False" Strikeout="False" />
+            <Font Family="DIN Alternate" Size="12" Bold="True" Italic="False" Underline="False" Strikeout="False" />
             <ForeColor Alpha="255" Red="0" Green="0" Blue="0" />
           </Attributes>
         </Element>
       </StyledText>
     </TextObject>
-    <Bounds X="220" Y="870" Width="2620" Height="240" />
+    <Bounds X="220" Y="880" Width="2620" Height="290" />
   </ObjectInfo>
 </DieCutLabel>
