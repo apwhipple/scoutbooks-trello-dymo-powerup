@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Box label for the DYMO 30336 Multi-Purpose roll (1 in x 2-1/8 in).
-  Hand-written starter template. dymo-print.js fills these text objects by NAME:
-    OrderNumber, BoxCount   (BoxCount is text like "Box 2 of 4")
-  Only the <Name> values matter at print time. To adjust layout, open this file
-  in DYMO Connect, tweak, and "Save As" over the same filename keeping the names.
+  dymo-print.js fills these text objects by NAME: OrderNumber, BoxCount
+  (BoxCount is text like "Box 2 of 4"). Only the <Name> values matter.
+  Layout: two lines, centered horizontally and vertically, tight spacing.
 -->
 <DieCutLabel Version="8.0" Units="twips">
   <PaperOrientation>Landscape</PaperOrientation>
@@ -22,7 +21,7 @@
       <Rotation>Rotation0</Rotation>
       <IsMirrored>False</IsMirrored>
       <IsVariable>True</IsVariable>
-      <HorizontalAlignment>Left</HorizontalAlignment>
+      <HorizontalAlignment>Center</HorizontalAlignment>
       <VerticalAlignment>Middle</VerticalAlignment>
       <TextFitMode>ShrinkToFit</TextFitMode>
       <UseFullFontHeight>True</UseFullFontHeight>
@@ -31,13 +30,13 @@
         <Element>
           <String>19711</String>
           <Attributes>
-            <Font Family="Helvetica" Size="20" Bold="True" Italic="False" Underline="False" Strikeout="False" />
+            <Font Family="Helvetica" Size="15" Bold="True" Italic="False" Underline="False" Strikeout="False" />
             <ForeColor Alpha="255" Red="0" Green="0" Blue="0" />
           </Attributes>
         </Element>
       </StyledText>
     </TextObject>
-    <Bounds X="130" Y="90" Width="2800" Height="560" />
+    <Bounds X="220" Y="410" Width="2620" Height="300" />
   </ObjectInfo>
   <ObjectInfo>
     <TextObject>
@@ -48,7 +47,7 @@
       <Rotation>Rotation0</Rotation>
       <IsMirrored>False</IsMirrored>
       <IsVariable>True</IsVariable>
-      <HorizontalAlignment>Left</HorizontalAlignment>
+      <HorizontalAlignment>Center</HorizontalAlignment>
       <VerticalAlignment>Middle</VerticalAlignment>
       <TextFitMode>ShrinkToFit</TextFitMode>
       <UseFullFontHeight>True</UseFullFontHeight>
@@ -57,12 +56,12 @@
         <Element>
           <String>Box 2 of 4</String>
           <Attributes>
-            <Font Family="Helvetica" Size="16" Bold="False" Italic="False" Underline="False" Strikeout="False" />
+            <Font Family="Helvetica" Size="12" Bold="False" Italic="False" Underline="False" Strikeout="False" />
             <ForeColor Alpha="255" Red="0" Green="0" Blue="0" />
           </Attributes>
         </Element>
       </StyledText>
     </TextObject>
-    <Bounds X="130" Y="700" Width="2800" Height="640" />
+    <Bounds X="220" Y="710" Width="2620" Height="300" />
   </ObjectInfo>
 </DieCutLabel>
