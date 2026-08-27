@@ -13,8 +13,8 @@ Both buttons pull the order number and client name from the **card title**.
 
 Everything after that is ignored. The regex is
 `/^\s*(\d+)\s*\(([^)]+)\)/` and lives in **one place**: [`card-title.js`](../card-title.js)
-(`CardTitle.parse`). `connector.html`, `popup-box.js` and the test harness all
-call it.
+(`CardTitle.parse`). `popup-archive.html`, `popup-box.js` and the test harness
+all call it.
 
 If a title doesn't match, the buttons show:
 *"Could not find an order number / client name at the start of the title."*
@@ -29,7 +29,7 @@ returning `{ orderNumber, clientName }` and nothing else needs to change.
 ### From Custom Fields instead of the title
 1. In `card-title.js`, replace `parse()` with a function that takes the card's
    custom-field items.
-2. In `connector.html` and `popup-box.js`, request the fields and pass them in:
+2. In `popup-archive.html` and `popup-box.js`, request the fields and pass them in:
 
    ```js
    t.card('customFieldItems').then(function (card) {

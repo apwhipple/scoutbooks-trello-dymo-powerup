@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="https://p.trello.com/power-up.min.js"></script>
+  <link rel="stylesheet" href="https://p.trello.com/power-up.min.css">
+  <script src="vendor/dymo.connect.framework.js"></script>
+  <script src="card-title.js"></script>
+  <script src="dymo-print.js"></script>
+  <style>
+    body { font-family: -apple-system, sans-serif; padding: 14px; font-size: 13px; }
+    #status { color: #44546f; }
+    #status.err { color: #c9372c; }
+    #status.ok { color: #216e4e; }
+    button { margin-top: 12px; padding: 6px 12px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div id="status">Printing archive label…</div>
+  <button id="closeBtn" hidden>Close</button>
+
+  <script>
+    var t = TrelloPowerUp.iframe();
+    var statusEl = document.getElementById('status');
+    var closeBtn = document.getElementById('closeBtn');
+
+    function setStatus(msg, cls) {
+      statusEl.textContent = msg;
+      statusEl.className = cls || '';
+    }
+    closeBtn.addEventListener('click', function () { t.closePopup(); });
+
+    t.card('name')
+      .then(function (card) {
+        var parsed = CardTitle.parse(card.name);
+        if (!parsed) {
+          throw new Error('Could not find an order number / client name at the start of the title.');
+        }
+        return DymoPrint.printArchiveLabel(parsed);
+      })
+      .then(function () {
+        setStatus('Archive label sent to printer.', 'ok');
+        setTimeout(function () { t.closePopup(); }, 1200);
+      })
+      .catch(function (err) {
+        setStatus('Print failed: ' + err.message, 'err');
+        closeBtn.hidden = false;
+        t.sizeTo('body');
+      });
+  </script>
+</body>
+</html>

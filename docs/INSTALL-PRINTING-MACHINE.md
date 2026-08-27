@@ -32,8 +32,8 @@ Repeat for every browser/profile that will be used for printing.
 
 Open the Trello board, open a card, click **Archive Label** or **Box Labels**.
 
-- **Archive Label** — parses the title, prints one label immediately, shows a
-  toast.
+- **Archive Label** — opens a small popup that prints one label immediately and
+  closes on success.
 - **Box Labels** — popup asks how many boxes, then prints one label per box
   (`Box 1 of N` … `Box N of N`), ~0.4 s apart.
 

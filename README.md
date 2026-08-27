@@ -16,14 +16,19 @@ It reads the order number and client name from the card title:
 
 | Button | Behaviour |
 |---|---|
-| **Archive Label** | Parses the title and prints one label immediately (order #, client name, today's date). Toast confirms success/failure — no popup. |
+| **Archive Label** | Opens a small popup that prints one label immediately (order #, client name, today's date), shows status, and closes itself on success. |
 | **Box Labels** | Popup asks how many boxes, then prints one label per box: `Box 1 of N`, `Box 2 of N`, … Each is a separate print job (the text differs per label, so the SDK's "copies" option can't be used). |
+
+Both buttons open a popup rather than printing from a callback, so the hidden
+connector iframe that Trello loads on every card stays tiny — the 340 KB DYMO
+SDK loads only when you actually print.
 
 ## File map
 
 | Path | Purpose |
 |---|---|
-| `connector.html` | Hidden iframe Trello loads on every card; registers the two card buttons. **This is the Iframe connector URL.** |
+| `connector.html` | Hidden iframe Trello loads on every card; registers the two card buttons (loads only the Trello client lib). **This is the Iframe connector URL.** |
+| `popup-archive.html` | Archive Label popup — prints on open. |
 | `popup-box.html` / `popup-box.js` | The box-count popup. |
 | `dymo-print.js` | Shared printing logic — framework init, environment check, printer lookup, template fill + print. |
 | `card-title.js` | The single shared title parser (`CardTitle.parse`). |
