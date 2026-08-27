@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <!-- Trello Power-Up client library -->
+  <script src="https://p.trello.com/power-up.min.js"></script>
+  <!-- DYMO Connect SDK, vendored so it is served from this same origin. -->
+  <script src="vendor/dymo.connect.framework.js"></script>
+  <script src="card-title.js"></script>
+  <script src="dymo-print.js"></script>
+</head>
+<body>
+<script>
+/*
+ * Hidden "connector" iframe Trello loads on every card. It registers the
+ * card-buttons capability with two buttons:
+ *   1) Archive Label  -> parses the title and prints immediately, no popup
+ *   2) Box Labels     -> opens a small popup to collect the box count
+ *
+ * Title parsing lives in card-title.js (CardTitle.parse); printing lives in
+ * dymo-print.js (DymoPrint).
+ */
+
+// assets/icon.svg is the real icon; this inline copy is only a fallback so the
+// buttons still render if that file 404s on a misconfigured host.
+var ICON_FALLBACK = 'data:image/svg+xml;base64,' + btoa(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
+  '<path fill="#5e6c84" d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3H4a1 1 0 0 0-1 1v5.59' +
+  'a2 2 0 0 0 .59 1.41l9.59 9.59a2 2 0 0 0 2.83 0l4.58-4.58a2 2 0 0 0 0-2.83zM7 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>' +
+  '</svg>'
+);
+
+TrelloPowerUp.initialize({
+  'card-buttons': function (t) {
+    // Relative URLs resolve against the hosted connector.html origin.
+    var icon = './assets/icon.svg';
+    return [
+      {
+        icon: icon || ICON_FALLBACK,
+        text: 'Archive Label',
+        callback: function (t) {
+          return t.card('name').then(function (card) {
+            var parsed = CardTitle.parse(card.name);
+            if (!parsed) {
+              return t.alert({
+                message: 'Could not find an order number / client name at the start of the title.',
+                duration: 6
+              });
+            }
+            return DymoPrint.printArchiveLabel(parsed)
+              .then(function () {
+                return t.alert({ message: 'Archive label sent to printer.', duration: 4 });
+              })
+              .catch(function (err) {
+                return t.alert({ message: 'Print failed: ' + err.message, duration: 8 });
+              });
+          });
+        }
+      },
+      {
+        icon: icon || ICON_FALLBACK,
+        text: 'Box Labels',
+        callback: function (t) {
+          return t.popup({
+            title: 'Print Box Labels',
+            url: 'popup-box.html',
+            height: 200
+          });
+        }
+      }
+    ];
+  }
+});
+</script>
+</body>
+</html>

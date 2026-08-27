@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>DYMO Power-Up — mock test harness</title>
+  <!--
+    Hardware-free test page. Serve the repo root over HTTP and open
+    /test/test.html:
+
+        python3 -m http.server 8000
+        open http://localhost:8000/test/test.html
+
+    <base> points relative URLs at the repo root so dymo-print.js can fetch
+    labels/*.label and load card-title.js the same way the real pages do.
+    dymo-mock.js replaces the real SDK — no DYMO Connect, no printer needed.
+  -->
+  <base href="../">
+  <script src="test/dymo-mock.js"></script>
+  <script src="card-title.js"></script>
+  <script src="dymo-print.js"></script>
+  <style>
+    body { font-family: -apple-system, sans-serif; max-width: 720px; margin: 24px auto; padding: 0 16px; }
+    label { display: block; font-size: 13px; color: #5e6c84; margin: 12px 0 4px; }
+    input { width: 100%; font-size: 15px; padding: 6px; box-sizing: border-box; }
+    .row { display: flex; gap: 8px; margin-top: 12px; }
+    button { flex: 1; padding: 10px; font-size: 14px; cursor: pointer; }
+    #err { color: #c9372c; font-size: 13px; margin-top: 8px; min-height: 1em; }
+    h2 { font-size: 14px; margin: 24px 0 8px; color: #5e6c84; }
+    .label-preview { border: 1px solid #ccc; border-radius: 6px; padding: 10px; margin-bottom: 8px; }
+    .label-preview .k { display: inline-block; width: 120px; color: #5e6c84; font-size: 12px; }
+    .label-preview .v { font-weight: 600; }
+    #log { font-family: ui-monospace, monospace; font-size: 12px; white-space: pre-wrap; color: #44546f; }
+  </style>
+</head>
+<body>
+  <h1>DYMO Power-Up — mock test harness</h1>
+
+  <label for="title">Card title</label>
+  <input id="title" value="19711 (SKINNER) | 1A* | POCKET | 55 | COVER - KRAFT | BLUE | GRAPH">
+
+  <label for="qty">Box count (for Box Labels)</label>
+  <input id="qty" type="number" min="1" value="4">
+
+  <div class="row">
+    <button id="archiveBtn">Archive Label</button>
+    <button id="boxBtn">Box Labels</button>
+  </div>
+  <div id="err"></div>
+
+  <h2>Rendered labels (newest first)</h2>
+  <div id="previews"></div>
+
+  <h2>Print log</h2>
+  <div id="log"></div>
+
+  <script>
+    var errEl = document.getElementById('err');
+    function parsedOrThrow() {
+      var parsed = CardTitle.parse(document.getElementById('title').value);
+      if (!parsed) throw new Error('Could not find an order number / client name at the start of the title.');
+      return parsed;
+    }
+    function run(fn) {
+      errEl.textContent = '';
+      Promise.resolve().then(fn).catch(function (e) { errEl.textContent = e.message; });
+    }
+
+    document.getElementById('archiveBtn').addEventListener('click', function () {
+      run(function () { return DymoPrint.printArchiveLabel(parsedOrThrow()); });
+    });
+    document.getElementById('boxBtn').addEventListener('click', function () {
+      run(function () {
+        var n = parseInt(document.getElementById('qty').value, 10);
+        if (!n || n < 1) throw new Error('Enter a box count of 1 or more.');
+        return DymoPrint.printBoxLabels(parsedOrThrow(), n);
+      });
+    });
+  </script>
+</body>
+</html>
