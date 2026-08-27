@@ -41,9 +41,9 @@ Open the Trello board, open a card, click **Archive Label** or **Box Labels**.
 
 | Symptom | Cause / fix |
 |---|---|
-| `DYMO Connect is not running (or its certificate has not been accepted…)` | DYMO Connect app not running, **or** step 2 not done in *this* browser. Reopen the app; redo the certificate step. |
+| `Cannot reach DYMO Connect on this computer…` | DYMO Connect app not running, **or** the certificate step (step 2) not done in *this* browser. Open the app; visit `https://127.0.0.1:41951` and accept the cert. Also update DYMO Connect — old versions are blocked by Chrome's Private Network Access rules from a site hosted on the public internet. |
 | `No DYMO LabelWriter found. Is it plugged in and turned on?` | USB unplugged, printer off, or driver missing. Check it appears in DYMO Connect. |
-| Button gives a success toast but nothing prints | Certificate accepted for a *different* browser/profile than the one in use. Redo step 2 here. |
+| Popup says sent but nothing prints | Certificate accepted for a *different* browser/profile than the one in use. Redo step 2 here. |
 | Text runs off the edge of the label | Widen/enlarge the text objects in DYMO Connect — open `labels/ArchiveLabel.label` (or `BoxLabel.label`), adjust, **File → Save As** over the same filename, keep the object **Names** (`OrderNumber`, `ClientName`, `PrintDate` / `BoxCount`). Commit and redeploy. |
 | Only one box label prints when you asked for several | Spooler is merging jobs. Increase `BOX_PRINT_GAP_MS` in `dymo-print.js` (try 800), redeploy. |
 | Wrong printer used (multiple DYMOs) | `dymo-print.js` prefers a printer whose name contains `450`, else the first one. Rename the target printer in Windows/macOS print settings to include `450`. |

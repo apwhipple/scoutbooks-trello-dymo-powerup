@@ -30,41 +30,52 @@ var DymoPrint = (function () {
         var done = false;
         var finish = function () { if (!done) { done = true; resolve(); } };
         try {
-          // init(cb): cb fires when async framework setup completes.
+          // init(cb): cb fires when async framework setup completes. Give it
+          // room — it probes several local ports before giving up.
           fw.init(finish);
         } catch (e) {
           finish();
         }
-        // Fallback: some builds init synchronously and never call the callback.
-        setTimeout(finish, 3000);
+        // Fallback in case the callback never fires (older sync builds).
+        setTimeout(finish, 8000);
       });
     },
 
     checkEnvironment: function () {
+      // The service check ("is DYMO Connect reachable?") is the one that
+      // matters. isBrowserSupported only goes false on the legacy-plugin
+      // fallback path, which really means "couldn't reach the service" on any
+      // modern browser — so don't lead with a scary browser message.
+      var NOT_REACHABLE =
+        'Cannot reach DYMO Connect on this computer. Check that:\n' +
+        '  1. DYMO Connect for Desktop is installed and running, and\n' +
+        '  2. you have opened https://127.0.0.1:41951 in this browser once\n' +
+        '     and accepted the certificate.\n' +
+        'See docs/INSTALL-PRINTING-MACHINE.md.';
+
       return new Promise(function (resolve, reject) {
         var fw = dymo.label.framework;
         var settled = false;
         var ok = function (env) {
           if (settled) return;
           settled = true;
-          if (env && env.isBrowserSupported === false) {
-            reject(new Error('This browser is not supported by DYMO Connect.'));
-          } else if (env && env.isWebServicePresent === false) {
-            reject(new Error(
-              'DYMO Connect is not running (or its certificate has not been ' +
-              'accepted in this browser). See docs/INSTALL-PRINTING-MACHINE.md.'));
+          env = env || {};
+          if (env.isWebServicePresent === false || env.isBrowserSupported === false) {
+            var msg = NOT_REACHABLE;
+            if (env.errorDetails) msg += '\n(' + env.errorDetails + ')';
+            reject(new Error(msg));
           } else {
-            resolve(env || {});
+            resolve(env);
           }
         };
         try {
-          var maybe = fw.checkEnvironment(ok, function () { ok({ isWebServicePresent: false }); });
+          var maybe = fw.checkEnvironment(ok, ok);
           // Older builds return the env object synchronously instead.
           if (maybe && typeof maybe.isWebServicePresent !== 'undefined') ok(maybe);
         } catch (e) {
           reject(e);
         }
-        setTimeout(function () { ok({}); }, 5000);
+        setTimeout(function () { ok({ isWebServicePresent: false }); }, 8000);
       });
     },
 
